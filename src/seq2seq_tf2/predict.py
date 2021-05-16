@@ -78,7 +78,7 @@ def get_rouge(results):
 if __name__ == '__main__':
     # 获得参数
     params = get_params()
-    params['greedy_decode'] = True
-    # params['beam_size'] = params['batch_size'] = 4
+    params['greedy_decode'] = False
+    params['beam_size'] = params['batch_size'] = 4
     # 获得参数
     test(params)
