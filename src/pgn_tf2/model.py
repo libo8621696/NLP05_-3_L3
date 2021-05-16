@@ -76,6 +76,7 @@ class PGN(tf.keras.Model):
                                        batch_oov_len,
                                        self.vocab_size,
                                        self.batch_size)
+        attentions = tf.stack(attentions, axis=1)
         return tf.stack(final_dists, 1), attentions, tf.stack(coverages, 1)
 
 

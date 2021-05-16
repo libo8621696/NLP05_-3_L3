@@ -8,7 +8,8 @@ from src.seq2seq_tf2.predict_helper import beam_decode, greedy_decode
 from src.utils.config import seq2seq_checkpoint_dir, test_x_path, test_y_path, test_seg_path
 from src.utils.gpu_utils import config_gpu
 from src.utils.params_utils import get_params
-from src.build_data import load_dataset
+# from src.build_data import load_dataset
+from src.build_data.utils import load_dataset
 from src.utils.wv_loader import Vocab
 import pandas as pd
 from rouge import Rouge
@@ -32,7 +33,7 @@ def test(params):
     checkpoint = tf.train.Checkpoint(Seq2Seq=model)
     checkpoint_manager = tf.train.CheckpointManager(checkpoint, seq2seq_checkpoint_dir, max_to_keep=5)
     checkpoint.restore(checkpoint_manager.latest_checkpoint)
-    # checkpoint.restore('/xhp/summary/data/checkpoints/training_checkpoints_seq2seq/ckpt-6')
+    # checkpoint.restore('../../data/checkpoints/training_checkpoints_seq2seq/ckpt-6')
     if checkpoint_manager.latest_checkpoint:
         print("Restored from {}".format(checkpoint_manager.latest_checkpoint))
     else:

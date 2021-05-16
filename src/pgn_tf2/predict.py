@@ -91,12 +91,12 @@ if __name__ == '__main__':
     params = get_params()
 
     # beam search
-    params['batch_size'] = 4
+    params['batch_size'] = 32
     params['beam_size'] = 4
     params['mode'] = 'test'
-    params['decode_mode'] = 'beam'
+    params['decode_mode'] = 'greedy'
     params['pointer_gen'] = True
-    params['use_coverage'] = False
+    params['use_coverage'] = True
     params['enc_units'] = 128
     params['dec_units'] = 256
     params['attn_units'] = 128

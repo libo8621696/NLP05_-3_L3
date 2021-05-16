@@ -1,9 +1,3 @@
-# -*- coding:utf-8 -*-
-# Created by LuoJie at 11/29/19
-import sys
-
-sys.path.append('/xhp/summary/src')
-
 from src.utils.gpu_utils import config_gpu
 
 import tensorflow as tf

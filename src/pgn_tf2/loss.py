@@ -8,9 +8,9 @@ loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False, r
 def calc_loss(real, pred, dec_mask, attentions, cov_loss_wt, eps):
     log_loss = pgn_log_loss_function(real, pred, dec_mask, eps)
     # log_loss = _log_loss(real, pred, dec_mask)
-    # cov_loss = _coverage_loss(attentions, dec_mask)
-    # return log_loss + cov_loss_wt * cov_loss, log_loss, cov_loss
-    return log_loss, 0, 0
+    cov_loss = _coverage_loss(attentions, dec_mask)
+    return log_loss + cov_loss_wt * cov_loss, log_loss, cov_loss
+    # return log_loss, 0, 0
 
 
 def _log_loss(target, pred, dec_mask):

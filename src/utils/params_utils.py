@@ -78,6 +78,7 @@ def get_params():
     parser.add_argument("--use_coverage", default=False, help="use_coverage", type=bool)
 
     parser.add_argument("--greedy_decode", default=False, help="greedy_decode", type=bool)
+    parser.add_argument("--decode_mode", default='greedy', help="greedy_decode", type=str)
     parser.add_argument("--result_save_path", default=get_result_filename(batch_size, epochs, 200, 300),
                         help='result_save_path', type=str)
     args = parser.parse_args()

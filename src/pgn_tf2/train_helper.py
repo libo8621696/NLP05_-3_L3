@@ -90,8 +90,8 @@ def train_step(model, enc_hidden, enc_input, extended_enc_input, max_oov_len,
                                                    params['eps'])
 
     if mode == 'train':
-        variables = model.encoder.trainable_variables + model.decoder.trainable_variables + \
-                    model.attention.trainable_variables + model.pointer.trainable_variables
+        variables = (model.encoder.trainable_variables + model.decoder.trainable_variables
+                     + model.pointer.trainable_variables)
 
         gradients = tape.gradient(batch_loss, variables)
 
