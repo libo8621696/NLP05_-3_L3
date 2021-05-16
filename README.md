@@ -1,182 +1,39 @@
+### Homework-week3
 
++ 参考模型和训练代码，继续完成week2的作业，保证可以训练seq2seq模型
 
+    + 在训练过程中出现找不到load_dataset.py的问题，通过在build_data文件夹中找到了load_dataset函数，需要在seq2seq_tf2中的seq2seq_batcher.py中加入from src.build_data.utils import load_dataset
 
+    + 在src/utils/gpu_utils.py中需要尤其考虑的是我们设置GPU的参数设置，我觉得老师的GPU应该是多个的，所以他在设置中选择了第二个GPU，参数为"1"，对于向我们这样的学生而言，一般只有1个GPU，因此需要在设置中选择第一个GPU，参数设置为"0"，具体如下图所示：
 
-先将AutoMaster_TrainSet 和 AutoMaster_TestSet 拷贝到data 路径下 再使用 .
+        ![GPU参数修改部分](./gpu设置.png)
 
+    + 经过以上的参数调整之后，就可以进行训练了，训练过程如下：
 
+        ![GPU参数修改部分](./训练结果1.jpg)
 
-代码结构
+        ![GPU参数修改部分](./训练结果2.jpg)
 
-+ result 结果保存路径
-    ....    
-+ seq2seq_tf2 模型结构
-    ....
-+ utils 工具包
-    + config  配置文件
-    + data_loader 数据处理模块
-    + multi_proc_utils 多进程数据处理
-+ data  数据集
-    + AutoMaster_TrainSet 拷贝数据集到该路径
-    + AutoMaster_TestSet  拷贝数据集到该路径
-    ....
-    
-    
-训练步骤:
-1. 拷贝数据集到data路径下
-2. 运行utils\data_loader.py可以一键完成 预处理数据 构建数据集
+        ![GPU参数修改部分](./训练结果3.jpg)
 
-##  seq2seq_tf2 模块
-* 训练模型 运行seq2seq_tf2\train.py脚本,进入 summary 目录,运行如下命令:
-    ```bash
-    $ python -m src.seq2seq_tf2.train
-    ```
+        ![GPU参数修改部分](./训练结果5.jpg)
 
+经过10轮epoch训练过程之后，loss结果从3.130到
 
-预测步骤:
-1. greedy decode 和 beam search 的代码都在 predict_helper.py 中，greedy 使用的是验证集损失最小的
-    ```json
-   {
-        "rouge-1": { 
-           "f": 0.31761580523281824,
-           "p": 0.35095753378433,  
-           "r": 0.3439340546952935
-       },
-       "rouge-2": {
-           "f": 0.13679872398179568,
-           "p": 0.14990364277693116,
-           "r": 0.1455355455469621
-       },
-       "rouge-l": {    
-           "f": 0.3193850357115565,
-           "p": 0.3712312939226222,
-           "r": 0.31313195314734876
-       }
-   }
-    ```
-2. 运行 predict.py 调用 greedy decode 或者 beam search 进行预测，beam search 使用的是最后一个ckpt，所以可能差在这
++ 补全predict_helper.py中函数batch_greedy_decode的greedy search代码如下：
 
-    ```json
-    {
-      "rouge-1": {
-        "f": 0.2915635508381314,
-        "p": 0.3804116780031509,
-        "r": 0.2719187833527539
-      },
-      "rouge-2": {
-        "f": 0.12879757845176937,
-        "p": 0.16785280802905464,
-        "r": 0.11995412911919483
-      },
-      "rouge-l": {
-        "f": 0.2901830986437813,
-        "p": 0.3689693518270286,
-        "r": 0.26824690814678
-      }
-    }
-    ```
-## pgn_tf2 模块
-1. 使用了 pointer ，未使用 coverage 机制，
-   - greedy 解码
-       ```json
-        {
-          "rouge-1": {
-            "f": 0.2829960170084011,
-            "p": 0.38460960847631137,
-            "r": 0.2845213443094316
-          },
-          "rouge-2": {
-            "f": 0.12414605543620791,
-            "p": 0.1676379768113762,
-            "r": 0.1269054024767184
-          },
-          "rouge-l": {
-            "f": 0.29623175018160924,
-            "p": 0.42430977114926877,
-            "r": 0.26538800605593477
-          }
-        }
-       ```
-   - beam search
-       ```json
-        {
-          "rouge-1": {
-               "f": 0.2651999864228139,
-               "p": 0.4065036840056818,
-               "r": 0.2469963017215841
-          },
-          "rouge-2": {
-               "f": 0.12424685470610693,
-               "p": 0.195351585337393,
-               "r": 0.11686033974071998
-          },
-          "rouge-l": {
-               "f": 0.2822344430219466,
-               "p": 0.4295556625392504,
-               "r": 0.242722479908954
-          }
-        }
-       ```
-2. pointer + coverage
-   - greedy 解码
-       ```json
-         {
-           "rouge-1": {
-             "f": 0.29464152746519856,
-             "p": 0.37752092544374083,
-             "r": 0.30440518835181823
-           },
-           "rouge-2": {
-             "f": 0.1335177727081173,
-             "p": 0.16973912800870636,
-             "r": 0.13972597888187344
-           },
-           "rouge-l": {
-             "f": 0.29598713909552105,
-             "p": 0.38594656409806355,
-             "r": 0.2820867442173792
-           }
-         }
-       ```
-## pgn_transformer_tf2 模块
-1. max_enc_len = 200,max_dec_len = 40
-   ```json
-    {
-      "rouge-1": {
-        "f": 0.12487834161314122,
-        "p": 0.10019451938562356,
-        "r": 0.24147098362099628
-      },
-      "rouge-2": {
-        "f": 0.03309384504232345,
-        "p": 0.026344187912833376,
-        "r": 0.07200730112164937
-      },
-      "rouge-l": {
-        "f": 0.24297878453744742,
-        "p": 0.40690526450124065,
-        "r": 0.20128083026164661
-      }
-    }
-   ```
-2. max_enc_len=400, max_dec_len = 100
+    ![Predict helper greedy code 代码](./greedy_code.jpg)
 
-   ```json
-    {
-      "rouge-1": {
-        "f": 0.08574490221087681,
-        "p": 0.1318115568560623,
-        "r": 0.1788133913191769
-      },
-      "rouge-2": {
-        "f": 0.01576017532651374,
-        "p": 0.030049816495901254,
-        "r": 0.032510132165779596
-      },
-      "rouge-l": {
-        "f": 0.19713579322392735,
-        "p": 0.40649808194131554,
-        "r": 0.14962353101026613
-      }
-    }
-   ```
++ 补全predict_helper.py中函数beam_decode中的代码
+
+    ![Predict helper beam decode 代码](./beam_decode.jpg)
+
++ 通过调整predict.py中的参数，使用gready search和beam search做预测
+
+    + 我们在predict的main方法中设置params[beam_code]=True，那么就会调用greedy search方法进行预测，如下图红色方框所示。
+
+    ![predict greedy search 代码](./greedy_code_param.jpg)
+
+    + 我们在predict的main方法中设置params[beam_code]=False，设置params['beam_size'] = params['batch_size'] = 4，那么就会调用beam search方法进行预测，其中的beam_size的大小参数和batch_size参数均为4，也可以调整为其他的参数值。
+
+    ![predict beam search 代码](./beam_search_param.jpg)
